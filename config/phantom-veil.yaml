@@ -1,0 +1,28 @@
+# Phantom-Veil Configuration
+# See docs/configuration.md for details
+
+phantom-veil:
+  mode: enforce          # detect | enforce | audit
+  algorithm: AES-256-GCM
+  key_rotation_interval: 86400   # 24 hours
+  quarantine_on_threat: true
+  attestation_interval: 300      # 5 minutes
+  dma_protection: true
+  log_level: info
+
+integrations:
+  specter_net:
+    enabled: true
+    event_endpoint: "localhost:9090"
+    auto_quarantine_threshold: 0.85
+  cerebro:
+    enabled: true
+    encrypted_model_store: true
+  obsidian_core:
+    enabled: true
+    policy_endpoint: "localhost:8443"
+
+hardware:
+  iommu_enabled: true
+  secure_processor: auto
+  memory_encryption: true
