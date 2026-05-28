@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  phantom-veil:
+    build: .
+    container_name: phantom-veil
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config:/app/config
+      - phantom-keys:/app/keys
+    environment:
+      - PHANTOM_MODE=enforce
+      - PHANTOM_LOG_LEVEL=info
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/kvm
+    restart: unless-stopped
+
+volumes:
+  phantom-keys:
+    driver: local
