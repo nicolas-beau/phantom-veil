@@ -1,64 +1,61 @@
 # 🛡️ Phantom-Veil
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-alpha-red.svg)]()
+[![Platform](https://img.shields.io/badge/platform-linux-lightgrey.svg)]()
+
 Encrypted memory protection and secure data isolation for the Obsidian Labs security platform.
 
-## Overview
+## What It Does
 
-Phantom-Veil provides hardware-backed memory encryption, secure key management, and memory isolation at the kernel level. It integrates with [specter-net](https://github.com/nicolas-beau/specter-net) for threat-triggered containment and [obsidian-core](https://github.com/nicolas-beau/obsidian-labs) for policy orchestration.
+Phantom-Veil provides **hardware-backed memory encryption** that protects sensitive workloads from memory disclosure, DMA attacks, and cold boot extraction. It integrates with the Obsidian ecosystem for automated threat response.
 
-## Features
+## Key Features
 
-- **AES-256 memory encryption** — Transparent per-page encryption
-- **Hardware key management** — Keys generated and stored in secure processor
-- **DMA protection** — IOMMU enforcement for device isolation
-- **Memory quarantine** — Instant process isolation on threat detection
-- **Zero-copy attestation** — Hardware-signed memory integrity reports
+| Feature | Description |
+|---------|-------------|
+| 🔐 AES-256-GCM Encryption | Transparent per-page memory encryption |
+| 🔑 Hardware Key Management | Keys generated in secure processor, never in host memory |
+| 🛡️ DMA Protection | IOMMU enforcement for device isolation |
+| 🔒 Process Quarantine | Instant memory isolation on threat detection |
+| 📋 Attestation | Hardware-signed integrity reports |
+| 🏰 Secure Enclaves | AMD SEV-based confidential computing |
 
-## Architecture
+## Ecosystem Integration
 
 ```
-┌─────────────────────────────────────────┐
-│        Application Layer                 │
-│  ┌──────────────────────────────────┐   │
-│  │  Phantom-Veil Python API         │   │
-│  └──────────────┬───────────────────┘   │
-│  ┌──────────────┴───────────────────┐   │
-│  │  Encryption Engine (AES-256)     │   │
-│  │  Per-VM key, hardware-managed    │   │
-│  └──────────────┬───────────────────┘   │
-│  ┌──────────────┴───────────────────┐   │
-│  │  Kernel Driver (HSL interface)   │   │
-│  └──────────────┬───────────────────┘   │
-│  ┌──────────────┴───────────────────┐   │
-│  │  Hardware Security Layer         │   │
-│  └──────────────────────────────────┘   │
-└─────────────────────────────────────────┘
+specter-net ──→ detects threat ──→ phantom-veil ──→ quarantines memory
+     ↑                                                    │
+     └────────────── obsidian-core (policy) ←─────────────┘
+                           │
+cerebro ←── encrypted model storage ───→ phantom-veil
+                           │
+ironclad ←── artifact verification ───→ phantom-veil
 ```
 
-## Integration
-
-| Component | Integration Point |
-|-----------|------------------|
-| [specter-net](https://github.com/nicolas-beau/specter-net) | Threat events trigger memory quarantine |
-| [cerebro](https://github.com/nicolas-beau/cerebro) | ML models stored in encrypted memory |
-| [ironclad](https://github.com/nicolas-beau/ironclad) | Build artifacts integrity-verified |
-| [obsidian-labs](https://github.com/nicolas-beau/obsidian-labs) | Architecture & company docs |
+| Component | Integration |
+|-----------|-------------|
+| [obsidian-labs](https://github.com/nicolas-beau/obsidian-labs) | Company & architecture docs |
+| [specter-net](https://github.com/nicolas-beau/specter-net) | Threat events trigger quarantine |
+| [cerebro](https://github.com/nicolas-beau/cerebro) | ML models stored encrypted |
+| [ironclad](https://github.com/nicolas-beau/ironclad) | Build integrity verification |
 
 ## Quick Start
 
-```python
-from phantom_veil import PhantomVeil
-
-veil = PhantomVeil()
-veil.init(config={"mode": "enforce", "algorithm": "AES-256-GCM"})
-
-# Encrypt a memory region
-veil.encrypt_region(addr=0x7f000000, size=4096)
-
-# Attest memory integrity
-report = veil.attest()
-print(report.status)  # "verified"
+```bash
+git clone https://github.com/nicolas-beau/phantom-veil.git
+cd phantom-veil
+pip install -r requirements.txt
+make test
 ```
+
+## Documentation
+
+- [API Reference](docs/api-reference.md)
+- [DMA Protection](docs/dma-protection.md)
+- [Performance Tuning](docs/performance.md)
+- [Security Hardening](docs/security-hardening.md)
+- [Troubleshooting](docs/troubleshooting.md)
 
 ## License
 
